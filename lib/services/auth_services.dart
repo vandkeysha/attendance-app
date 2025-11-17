@@ -17,7 +17,7 @@ class AuthServices {
   // get current user
   User? get currentUser => _auth.currentUser;
 
-  // auth state changes stream
+  // auth state changes stream = ga perlu manual cek user login 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   // sign in with email and password

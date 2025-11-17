@@ -6,10 +6,10 @@ final String label;
 final IconData icon;
 final bool obscureText;
 final Widget? suffixIcon;
-final TextInputType keyboardType;
+final TextInputType? keyboardType;
 final String ? Function(String?)? validator;
 
-  const AuthTextField({super.key, required this.controller, required this.label, required this.icon, this.suffixIcon, required this.keyboardType, this.validator, required this.obscureText});
+  const AuthTextField({super.key, required this.controller, required this.label, required this.icon, this.suffixIcon, this.keyboardType, this.validator, required this.obscureText});
 
   @override
   Widget build(BuildContext context) {
