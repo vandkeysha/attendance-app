@@ -13,39 +13,37 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); // untuk perubahan state
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _authService = AuthServices();
-  bool _isLoading = false;
-  bool _obscurePassword = true;
+  bool _isLoading = false; // Loading indicator
+  bool _obscurePassword = true; // password otomatis tidak kelihatan
   bool _obscureConfirmPassword = true;
 
   Future<void> _register() async {
-    if (_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
     
-    // Proses Login
     try {
       await _authService.registerWithEmailAndPassword(
-        _emailController.text.trim(),
+        _emailController.text.trim(), // Biar spasi tidak kebaca saat copy code otp 
         _passwordController.text.trim(),
       );
     } catch (e) {
-      if (mounted) {
+      if (mounted) { // mounted => ketika widget active dan berada pada widget 3
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red,)
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red)
         );
       }
     } finally {
-      if (mounted) setState(() => _isLoading = false);
-      
+      if (mounted) setState(() => _isLoading = false); 
     }
   }
 
-  @override 
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -58,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return GradientScaffold(
       logoIcon: Icons.person_add_rounded,
       title: 'Create Account',
-      subtitle: 'Register to get start',
+      subtitle: 'Register to Get Started',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -71,14 +69,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [AuthTextField(
-                    controller: _emailController,
-                    label: 'Email',
-                    icon: Icons.email_outlined,
-                    obscureText: false,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) => 
-                      value?.isEmpty ?? true ? 'Please enter your email' : null,
+                  children: [
+                    AuthTextField(
+                      controller: _emailController,
+                      label: 'Email',
+                      icon: Icons.email_outlined,
+                      obscureText: false,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) => value?.isEmpty ?? true
+                          ? 'Please enter your email'
+                          : null,
                     ),
                     SizedBox(height: 16),
                     AuthTextField(
@@ -91,13 +91,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                           color: Colors.blue[600],
                         ),
-                        onPressed: () => setState(() => _obscurePassword = ! _obscurePassword)
+                        onPressed: () => setState(() => _obscurePassword = !_obscureConfirmPassword),
                       ),
                       validator: (value) {
                         if (value?.isEmpty ?? true) return 'Please enter your password';
-                        if (value!.length < 6) return 'Password mush be at least 6 characters';
+                        if (value!.length < 6) return 'Password must be at leat 6 character';
                         return null;
-                      }, 
+                      },
                     ),
                     SizedBox(height: 16),
                     AuthTextField(
@@ -110,12 +110,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           _obscureConfirmPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                           color: Colors.blue[600],
                         ),
-                        onPressed: () => setState(() => _obscureConfirmPassword = ! _obscureConfirmPassword),
+                        onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                       ),
                       validator: (value) {
-                        if (value?.isEmpty ?? true) return 'Please confirm your password';
+                        if (value?.isEmpty ?? true) return 'Pleaase confirm your password';
                         if (value != _passwordController.text) return 'Password do not match';
-                        return null; // kalo ga kenapa napa dia return null
+                        return null;
                       },
                     ),
                     SizedBox(height: 24),
@@ -129,32 +129,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         elevation: 4
                       ),
                       child: _isLoading
-                        ? SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                        ) 
-                        : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.person_add_rounded),
-                            SizedBox(width: 8),
-                            Text(
-                              'Register',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ],
-                        ),
-                    ),
+                          ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                          : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.person_add_rounded, size: 20),
+                              SizedBox(width: 8),
+                              Text(
+                                'Register',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold
+                                ),
+                              )
+                            ],
+                          )
+                    )
                   ],
-                ), 
+                ),
               ),
             ),
           ),
-          SizedBox(height: 24),
+          SizedBox(height: 20),
           TextButton(
             onPressed: widget.onLoginTap,
             style: TextButton.styleFrom(foregroundColor: Colors.white),
@@ -162,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'Already have an account? Login',
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w500
               ),
             ),
           )
